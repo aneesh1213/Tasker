@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/sriniously/go-boilerplate/internal/server"
-	"github.com/sriniously/go-boilerplate/internal/service"
+	"github.com/aneesh1213/tasker/internal/server"
+	"github.com/aneesh1213/tasker/internal/service"
 )
 
 type Handlers struct {

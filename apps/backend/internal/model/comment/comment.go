@@ -11,3 +11,4 @@ type Comment struct {
 	UserID  string    `json:"userId" db:"user_id"`
 	Content string    `json:"content" db:"content"`
 }
+

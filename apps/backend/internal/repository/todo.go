@@ -153,8 +153,6 @@ func (r *TodoRepository) GetTodoByID(ctx context.Context, userID string, todoID 
 	return &todoItem, nil
 }
 
-
-
 func (r *TodoRepository) CheckTodoExists(ctx context.Context, userID string, todoID uuid.UUID) (*todo.Todo, error) {
 	stmt := `
 		SELECT
@@ -182,10 +180,9 @@ func (r *TodoRepository) CheckTodoExists(ctx context.Context, userID string, tod
 	return &todoItem, nil
 }
 
-
 //  get all todos
 
-func (r *TodoRepository) getTodos(ctx context.Context, userID string, query todo.GetTodosQuery) (*model.PaginatedResponse[todo.PopulatedTodo], error){
+func (r *TodoRepository) GetTodos(ctx context.Context, userID string, query *todo.GetTodosQuery) (*model.PaginatedResponse[todo.PopulatedTodo], error) {
 	stmt := `
 	SELECT
 		t.*,
@@ -239,11 +236,10 @@ func (r *TodoRepository) getTodos(ctx context.Context, userID string, query todo
 `
 
 	args := pgx.NamedArgs{
-		"user_id" : userID,
+		"user_id": userID,
 	}
 
-
-	conditions := []string{"t.user_id = @user_id" }
+	conditions := []string{"t.user_id = @user_id"}
 
 	if query.Status != nil {
 		conditions = append(conditions, "t.status = @status")
@@ -282,7 +278,6 @@ func (r *TodoRepository) getTodos(ctx context.Context, userID string, query todo
 		conditions = append(conditions, "t.due_date < NOW() AND t.status != 'completed'")
 	}
 
-
 	if query.Completed != nil {
 		if *query.Completed {
 			conditions = append(conditions, "t.status = 'completed'")
@@ -310,7 +305,6 @@ func (r *TodoRepository) getTodos(ctx context.Context, userID string, query todo
 	if err != nil {
 		return nil, fmt.Errorf("failed to get total count for todos user_id=%s: %w", userID, err)
 	}
-
 
 	stmt += " GROUP BY t.id, c.id"
 
@@ -348,7 +342,6 @@ func (r *TodoRepository) getTodos(ctx context.Context, userID string, query todo
 		return nil, fmt.Errorf("failed to collect rows from table:todos for user_id=%s: %w", userID, err)
 	}
 
-
 	return &model.PaginatedResponse[todo.PopulatedTodo]{
 		Data:       todos,
 		Page:       *query.Page,
@@ -358,10 +351,7 @@ func (r *TodoRepository) getTodos(ctx context.Context, userID string, query todo
 	}, nil
 }
 
-
-
 // update todo function
-
 
 func (r *TodoRepository) UpdateTodo(ctx context.Context, userID string, payload *todo.UpdateTodoPayload) (*todo.Todo, error) {
 	stmt := "UPDATE todos SET "
@@ -439,8 +429,7 @@ func (r *TodoRepository) UpdateTodo(ctx context.Context, userID string, payload 
 	return &updatedTodo, nil
 }
 
-
-func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID string) error {
+func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID uuid.UUID) error {
 	stmt := `
 		DELETE FROM todos
 		where
@@ -463,7 +452,6 @@ func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID s
 
 	return nil
 }
-
 
 func (r *TodoRepository) GetTodoStats(ctx context.Context, userID string) (*todo.TodoStats, error) {
 	stmt := `
@@ -515,5 +503,3 @@ func (r *TodoRepository) GetTodoStats(ctx context.Context, userID string) (*todo
 
 	return &stats, nil
 }
-
-

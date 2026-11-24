@@ -96,12 +96,12 @@ func (q *GetTodosQuery) Validate() error {
 
 // get single todos by id
 
-type GetTodoByIDPayLoad struct {
+type GetTodoByIDPayload struct {
 	ID     uuid.UUID      `param:"id" validate="required, uuid"`
 }
 
 
-func (p *GetTodoByIDPayLoad) Validate() error{
+func (p *GetTodoByIDPayload) Validate() error{
 	validate := validator.New()
 	return validate.Struct(p);
 }
@@ -126,4 +126,39 @@ func (p *GetTodoStatsPayload) Validate() error {
 	return nil
 }
 
+
+// upload attachment 
+
+type UploadTodoAttachmentPayload struct {
+	TodoID uuid.UUID `param:"id" validate:"required,uuid"`
+}
+
+func (p *UploadTodoAttachmentPayload) Validate() error {
+	validate := validator.New()
+	return validate.Struct(p)
+}
+
+// delete todo attachment 
+
+type DeleteTodoAttachmentPayload struct {
+	TodoID       uuid.UUID `param:"id" validate:"required,uuid"`
+	AttachmentID uuid.UUID `param:"attachmentId" validate:"required,uuid"`
+}
+
+func (p *DeleteTodoAttachmentPayload) Validate() error {
+	validate := validator.New()
+	return validate.Struct(p)
+}
+
+// get attachemnt presigned payload 
+
+type GetAttachmentPresignedURLPayload struct {
+	TodoID       uuid.UUID `param:"id" validate:"required,uuid"`
+	AttachmentID uuid.UUID `param:"attachmentId" validate:"required,uuid"`
+}
+
+func (p *GetAttachmentPresignedURLPayload) Validate() error {
+	validate := validator.New()
+	return validate.Struct(p)
+}
 

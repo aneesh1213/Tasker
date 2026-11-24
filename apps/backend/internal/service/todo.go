@@ -18,6 +18,17 @@ type TodoService struct {
 	awsClient    *aws.AWS
 }
 
+func NewTodoService(server *server.Server, todoRepo *repository.TodoRepository,
+	categoryRepo *repository.CategoryRepository, awsClient *aws.AWS,
+) *TodoService {
+	return &TodoService{
+		server:       server,
+		todoRepo:     todoRepo,
+		categoryRepo: categoryRepo,
+		awsClient:    awsClient,
+	}
+}
+
 func (s *TodoService) CreateTodo(ctx echo.Context, userID string, payload *todo.CreateTodoPayload) (*todo.Todo, error) {
 	logger := middleware.GetLogger(ctx)
 
